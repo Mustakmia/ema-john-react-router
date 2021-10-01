@@ -3,6 +3,9 @@ import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
 import { addToDb, getStoredCart } from '../../utilities/fakedb';
 import './Shop.css';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
@@ -36,7 +39,18 @@ const Shop = () => {
     }, [products])
 
     const handleAddToCart = (product) => {
-        const newCart = [...cart, product];
+        const exixts = cart.find(pd => pd.key === product.key);
+        let newCart = [];
+        if (exixts) {
+            const rest = cart.filter(pd => pd.key !== product.key);
+            exixts.quantity = exixts.quantity + 1;
+            newCart = [...rest, product];
+        }
+        else {
+            product.quantity = 1;
+            newCart = [...cart, product];
+        }
+
         setCart(newCart);
         // save to local storage (for now)
         addToDb(product.key);
@@ -57,6 +71,7 @@ const Shop = () => {
                     type="text"
                     onChange={handleSearch}
                     placeholder="Search Product" />
+                <FontAwesomeIcon icon={faShoppingCart} />
             </div>
             <div className="shop-container">
                 <div className="product-container">
@@ -71,6 +86,11 @@ const Shop = () => {
                 </div>
                 <div className="cart-container">
                     <Cart cart={cart}></Cart>
+                    <Link to="/review">
+                        <button className="btn-regular">
+                            Review Your Order
+                        </button>
+                    </Link>
                 </div>
             </div>
         </>
