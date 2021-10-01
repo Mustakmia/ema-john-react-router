@@ -9,7 +9,7 @@ const useCart = products => {
             const savedCart = getStoredCart();
             const storedCart = [];
             for (const key in savedCart) {
-                const addedProducts = products.find(products => products.key === key);
+                const addedProducts = products.find(product => product.key === key);
                 if (addedProducts) {
                     const quantity = savedCart[key];
                     addedProducts.quantity = quantity;
@@ -19,7 +19,7 @@ const useCart = products => {
             setCart(storedCart);
         }
     }, [products]);
-    return [cart]
+    return [cart, setCart]
 }
 export default useCart;
 
